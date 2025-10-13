@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Printique — AI 3D Model Generator</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Model Viewer for 3D rendering -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar">
+    <div class="logo">🧠 Printique</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#generate">Generate</a></li>
+      <li><a href="#preview">Preview</a></li>
+      <li><a href="#analytics">Analytics</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="theme-toggle" id="theme-toggle">
+      <span id="theme-icon">🌙</span>
+    </div>
+  </nav>
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="section home-section">
+    <!-- Canvas for animation -->
+    <canvas id="home-bg"></canvas>
+
+    <div class="home-content">
+      <h1>Transform Text into 3D Reality</h1>
+      <p>Printique lets you create AI-generated, printable 3D models from text prompts or hybrid image inputs — complete with auto-scaling, repair, and print analytics.</p>
+      <button class="btn-primary" onclick="scrollToSection('generate')">Start Generating 🚀</button>
+    </div>
+  </section>
+
+  <!-- ================= GENERATE ================= -->
+  <section id="generate" class="section generate-section">
+  <h2 class="section-title">🧩 Generate Your 3D Model</h2>
+  <p class="section-subtitle">Create AI-generated 3D models from text or hybrid inputs</p>
+
+  <div class="generator-container">
+    <div class="generator-card">
+      <label for="input-type">Input Type:</label>
+      <select id="input-type">
+        <option value="text">Text Prompt</option>
+        <option value="hybrid">Hybrid (Text + Image)</option>
+      </select>
+    </div>
+
+    <div class="generator-card full-width">
+      <label for="text-prompt">Enter Text Prompt:</label>
+      <textarea id="text-prompt" placeholder="e.g., a futuristic chair with metal frame"></textarea>
+    </div>
+
+    <div class="generator-card full-width">
+      <label for="image">Upload Image (optional):</label>
+      <input type="file" id="image" accept="image/*">
+    </div>
+
+    <div class="generator-card full-width">
+      <button id="generate-btn" class="btn-primary btn-large">Generate 3D Model</button>
+      <div id="generation-status" class="status-message">Waiting for input...</div>
+    </div>
+  </div>
+</section>
+
+  <!-- ================= PREVIEW ================= -->
+  <section id="preview" class="section preview-section">
+    <h2>🌀 Model Preview</h2>
+    <p>Interact with your generated 3D model before downloading.</p>
+    <model-viewer id="model-viewer"
+      src=""
+      alt="3D Model Preview"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1"
+      style="width: 100%; height: 500px; background-color: #1c1c1c;">
+    </model-viewer>
+    <div class="download-buttons">
+      <button class="btn-secondary" id="download-stl">⬇ Download STL</button>
+      <button class="btn-secondary" id="download-ply">⬇ Download PLY</button>
+    </div>
+  </section>
+
+  <!-- ================= ANALYTICS ================= -->
+  <section id="analytics" class="section analytics-section">
+  <h2 class="section-title">📊 Print Analytics Dashboard</h2>
+  <p class="section-subtitle">Adjust your print parameters and see estimated results</p>
+
+  <div class="analytics-container">
+    <!-- Left panel: sliders -->
+    <div class="analytics-card sliders-panel">
+      <h3>Adjust Print Parameters</h3>
+
+      <label>Material:</label>
+      <select id="material">
+        <option>PLA</option>
+        <option>ABS</option>
+        <option>PETG</option>
+      </select>
+
+      <label>Scale:</label>
+      <input type="range" id="scale" min="0.1" max="5" step="0.1" value="1">
+
+      <label>Infill (%):</label>
+      <input type="range" id="infill" min="0" max="100" step="5" value="20">
+
+      <label>Layer Height (mm):</label>
+      <input type="range" id="layer-height" min="0.05" max="0.4" step="0.05" value="0.2">
+
+      <label>Print Speed (mm/s):</label>
+      <input type="range" id="speed" min="10" max="120" step="5" value="50">
+
+      <button class="btn-primary btn-large" id="update-analytics">Update Analytics</button>
+    </div>
+
+    <!-- Right panel: charts -->
+    <div class="analytics-card charts-panel">
+      <h3>Print Visualization</h3>
+      <canvas id="volumeChart"></canvas>
+      <canvas id="timeChart" style="margin-top:20px;"></canvas>
+    </div>
+  </div>
+
+  <!-- Results card -->
+  <div class="analytics-card results-card">
+    <h3>📋 Estimated Print Summary</h3>
+    <p>• Total Volume: <span id="volume">--</span> cm³</p>
+    <p>• Filament Used: <span id="filament">--</span> m</p>
+    <p>• Filament Weight: <span id="weight">--</span> g</p>
+    <p>• Estimated Print Time: <span id="time">--</span></p>
+    <a href="/download/print_summary" class="btn-secondary btn-large">⬇ Download JSON Report</a>
+  </div>
+</section>
+
+
+
+  <!-- ================= ABOUT ================= -->
+<section id="about" class="section about-section">
+  <h2 class="section-title">ℹ About This Project</h2>
+  <div class="about-container">
+    
+    <div class="about-card">
+      <h3>Project Overview</h3>
+      <p><strong>Printique</strong> is an AI-powered 3D model generation platform that converts text or hybrid inputs into printable 3D models. It integrates OpenAI’s Shap-E, automatic mesh repair, scaling, and printability optimization to provide a seamless 3D printing experience.</p>
+    </div>
+
+    <div class="about-card">
+      <h3>Limitations</h3>
+      <p>Currently, generated models may lack fine detail due to Shap-E constraints. Integration with TripoSR or fine-tuned text-to-3D models can improve surface fidelity significantly.</p>
+    </div>
+
+    <div class="about-card">
+      <h3>Future Work</h3>
+      <ul>
+        <li>Integration with TripoSR for enhanced fidelity</li>
+        <li>Real-time G-code generation</li>
+        <li>Advanced mesh smoothing and surface refinement</li>
+        <li>Multi-material print simulation</li>
+      </ul>
+    </div>
+
+    <div class="about-card developer-card">
+      <h3>Developed By</h3>
+      <p><strong>Printique</strong><br>
+      Final Year — B.E. in Computer Science & Engineering<br>
+      Dr. TTIT College</p>
+    </div>
+
+  </div>
+</section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <p>© 2025 Printique | AI-Powered 3D Model Generation</p>
+  </footer>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
